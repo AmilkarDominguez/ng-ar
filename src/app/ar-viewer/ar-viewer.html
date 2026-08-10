@@ -1,0 +1,40 @@
+<a-scene
+  mindar-image="imageTargetSrc: targets/targets.mind; autoStart: true; uiScanning: true; uiLoading: yes; filterMinCF: 0.0001; filterBeta: 0.001;"
+  color-space="sRGB"
+  renderer="colorManagement: true, physicallyCorrectLights"
+  vr-mode-ui="enabled: false"
+  device-orientation-permission-ui="enabled: false"
+>
+  <a-assets>
+    <a-asset-item id="ar-model" src="models/model.glb"></a-asset-item>
+  </a-assets>
+
+  <a-camera
+    position="0 0 0"
+    look-controls="enabled: false"
+    cursor="fuse: false; rayOrigin: mouse;"
+    raycaster="far: 10000;"
+  ></a-camera>
+
+  <a-entity light="type: ambient; intensity: 0.7"></a-entity>
+  <a-entity light="type: directional; intensity: 0.6" position="1 1 1"></a-entity>
+
+  <a-entity #targetEntity mindar-image-target="targetIndex: 0">
+    <!--
+      Ajustá position/rotation/scale según las dimensiones del modelo real
+      (los .glb suelen venir en unidades/escala distintas). Podés afinarlo
+      en vivo con el inspector de A-Frame (Ctrl+Alt+I en el navegador).
+    -->
+    <a-gltf-model
+      src="#ar-model"
+      animation-mixer="loop: repeat"
+      position="0 0 0"
+      rotation="0 0 0"
+      scale="0.05 0.05 0.05"
+    ></a-gltf-model>
+  </a-entity>
+</a-scene>
+
+<div class="hint" [class.hidden]="targetFound()">
+  <p>Apunta la cámara al marcador para ver el contenido en realidad aumentada</p>
+</div>

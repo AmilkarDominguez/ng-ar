@@ -31,6 +31,10 @@
             ],
             "styles": [
               "src/styles.scss"
+            ],
+            "scripts": [
+              "node_modules/aframe/dist/aframe-master.min.js",
+              "node_modules/mind-ar/dist/mindar-image-aframe.prod.js"
             ]
           },
           "configurations": {
@@ -38,8 +42,8 @@
               "budgets": [
                 {
                   "type": "initial",
-                  "maximumWarning": "500kB",
-                  "maximumError": "1MB"
+                  "maximumWarning": "4MB",
+                  "maximumError": "6MB"
                 },
                 {
                   "type": "anyComponentStyle",

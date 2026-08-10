@@ -17,7 +17,10 @@
     "@angular/forms": "^21.2.0",
     "@angular/platform-browser": "^21.2.0",
     "@angular/router": "^21.2.0",
+    "aframe": "^1.8.0",
+    "mind-ar": "^1.2.5",
     "rxjs": "~7.8.0",
+    "three": "^0.185.1",
     "tslib": "^2.3.0"
   },
   "devDependencies": {
