@@ -4,7 +4,7 @@ Esta carpeta debe contener el archivo que usa `ArViewer` (`src/app/ar-viewer/ar-
 
 - `targets.mind` — archivo binario compilado que MindAR usa para reconocer la(s) imagen(es) marcador. **No está incluido**, hay que generarlo.
 
-(El modelo 3D que se muestra al detectar el marcador vive aparte, en `public/models/` — ver `public/models/README.md`.)
+(El contenido que se muestra al detectar el marcador —panel, avatar, textos, íconos— son planos 2D definidos en `src/app/ar-viewer/ar-viewer.html` con texturas en `public/ar/` — ver `public/ar/README.md`.)
 
 ## Cómo generar `targets.mind`
 

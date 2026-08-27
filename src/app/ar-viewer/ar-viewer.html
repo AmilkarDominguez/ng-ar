@@ -1,3 +1,16 @@
+@let card = cardData();
+
+<!--
+  AR business card: a composition of animated 2D <a-plane>s (plus one decorative
+  primitive) overlaid on the physical card when MindAR detects the marker.
+  Content is data-driven from ArCardDataService. Custom components used here
+  (social-link, card-orchestrator) are registered in ar-aframe-components.ts.
+
+  Entrance choreography: every element tagged `data-entrance` keeps its
+  `animation__in` / ambient loops paused (`startEvents: card:enter`). The
+  `card-orchestrator` on the target entity re-emits `card:enter` on every
+  `targetFound`, so the scene animates in fresh on each scan.
+-->
 <a-scene
   mindar-image="imageTargetSrc: targets/targets.mind; autoStart: true; uiScanning: true; uiLoading: yes; filterMinCF: 0.0001; filterBeta: 0.001;"
   color-space="sRGB"
@@ -5,36 +18,163 @@
   vr-mode-ui="enabled: false"
   device-orientation-permission-ui="enabled: false"
 >
-  <a-assets>
-    <a-asset-item id="ar-model" src="models/model.glb"></a-asset-item>
+  <a-assets timeout="8000">
+    <img id="ar-panel" [attr.src]="'ar/panel-bg.png'" crossorigin="anonymous" />
+    <img id="ar-glow" [attr.src]="'ar/glow.png'" crossorigin="anonymous" />
+    <img id="ar-name-plate" [attr.src]="'ar/name-plate.png'" crossorigin="anonymous" />
+    <img id="ar-progress" [attr.src]="'ar/progress-bar.png'" crossorigin="anonymous" />
+    <img id="ar-hud-1" [attr.src]="'ar/hud-element-1.png'" crossorigin="anonymous" />
+    <img id="ar-hud-2" [attr.src]="'ar/hud-element-2.png'" crossorigin="anonymous" />
+    <img id="ar-avatar" [attr.src]="card.avatar" crossorigin="anonymous" />
+    @for (link of card.links; track link.id) {
+      <img [attr.id]="'ar-icon-' + link.id" [attr.src]="link.icon" crossorigin="anonymous" />
+    }
+    @if (card.avatarVideo) {
+      <video id="ar-avatar-video" [attr.src]="card.avatarVideo" loop autoplay muted playsinline crossorigin="anonymous"></video>
+    }
   </a-assets>
 
   <a-camera
     position="0 0 0"
     look-controls="enabled: false"
     cursor="fuse: false; rayOrigin: mouse;"
-    raycaster="far: 10000;"
+    raycaster="objects: .clickable; far: 10000;"
   ></a-camera>
 
-  <a-entity light="type: ambient; intensity: 0.7"></a-entity>
-  <a-entity light="type: directional; intensity: 0.6" position="1 1 1"></a-entity>
+  <a-entity light="type: ambient; intensity: 0.75"></a-entity>
+  <a-entity light="type: directional; intensity: 0.5" position="1 1 1"></a-entity>
 
-  <a-entity #targetEntity mindar-image-target="targetIndex: 0">
-    <!--
-      Ajustá position/rotation/scale según las dimensiones del modelo real
-      (los .glb suelen venir en unidades/escala distintas). Podés afinarlo
-      en vivo con el inspector de A-Frame (Ctrl+Alt+I en el navegador).
-    -->
-    <a-gltf-model
-      src="#ar-model"
-      animation-mixer="loop: repeat"
+  <a-entity #targetEntity mindar-image-target="targetIndex: 0" card-orchestrator>
+    <!-- CAPA 0 · glow pulsante detrás de todo -->
+    <a-plane
+      src="#ar-glow"
+      position="0 0 -0.02"
+      width="1.75"
+      height="2.05"
+      material="transparent: true; alphaTest: 0.001; opacity: 0; side: double"
+      data-entrance
+      animation__pulse="property: material.opacity; from: 0.15; to: 0.5; dur: 2200; dir: alternate; loop: true; easing: easeInOutSine; startEvents: card:enter"
+    ></a-plane>
+
+    <!-- CAPA 1 · panel de fondo -->
+    <a-plane
+      src="#ar-panel"
       position="0 0 0"
-      rotation="0 0 0"
-      scale="0.05 0.05 0.05"
-    ></a-gltf-model>
+      width="1.4"
+      height="1.9"
+      scale="0.4 0.4 0.4"
+      material="transparent: true; alphaTest: 0.05; side: double"
+      data-entrance
+      animation__in="property: scale; from: 0.4 0.4 0.4; to: 1 1 1; dur: 650; easing: easeOutElastic; startEvents: card:enter"
+    ></a-plane>
+
+    <!-- CAPA 2 · barra de progreso HUD (arriba) -->
+    <a-plane
+      src="#ar-progress"
+      position="0 0.7 0.02"
+      width="1.0"
+      height="0.12"
+      scale="0 1 1"
+      material="transparent: true; alphaTest: 0.05; side: double"
+      data-entrance
+      animation__in="property: scale; from: 0 1 1; to: 1 1 1; dur: 650; delay: 650; easing: easeOutCubic; startEvents: card:enter"
+    ></a-plane>
+
+    <!-- CAPA 2 · cubo decorativo giratorio (único primitivo 3D) -->
+    <a-box
+      position="-0.52 0.7 0.05"
+      width="0.07"
+      height="0.07"
+      depth="0.07"
+      [attr.color]="card.accentColor"
+      material="opacity: 0.85"
+      data-entrance
+      animation__spin="property: rotation; from: 0 0 0; to: 360 360 0; dur: 6000; loop: true; easing: linear; startEvents: card:enter"
+      animation__float="property: position; from: -0.52 0.68 0.05; to: -0.52 0.72 0.05; dur: 2200; dir: alternate; loop: true; easing: easeInOutSine; startEvents: card:enter"
+    ></a-box>
+
+    <!-- CAPA 3 · avatar -->
+    <a-plane
+      [attr.src]="card.avatarVideo ? '#ar-avatar-video' : '#ar-avatar'"
+      position="0 0.2 0.01"
+      width="0.62"
+      height="0.82"
+      scale="0 0 0"
+      material="transparent: true; alphaTest: 0.1; opacity: 0; side: double"
+      data-entrance
+      animation__in="property: scale; from: 0 0 0; to: 1 1 1; dur: 500; delay: 200; easing: easeOutBack; startEvents: card:enter"
+      animation__fade="property: material.opacity; from: 0; to: 1; dur: 300; delay: 200; startEvents: card:enter"
+    ></a-plane>
+
+    <!-- CAPA 4 · placa + textos (nombre / cargo · empresa) -->
+    <a-plane
+      src="#ar-name-plate"
+      position="0 -0.45 0.01"
+      width="1.16"
+      height="0.42"
+      scale="0 0 0"
+      material="transparent: true; alphaTest: 0.05; side: double"
+      data-entrance
+      animation__in="property: scale; from: 0 0 0; to: 1 1 1; dur: 450; delay: 350; easing: easeOutBack; startEvents: card:enter"
+    ></a-plane>
+
+    <a-text
+      [attr.text]="'value: ' + card.name + '; color: ' + card.textColor + '; align: center; width: 2; opacity: 0'"
+      position="0 -0.38 0.03"
+      data-entrance
+      animation__in="property: position; from: 0 -0.5 0.03; to: 0 -0.38 0.03; dur: 400; delay: 450; easing: easeOutCubic; startEvents: card:enter"
+      animation__fade="property: text.opacity; from: 0; to: 1; dur: 300; delay: 450; startEvents: card:enter"
+    ></a-text>
+
+    <a-text
+      [attr.text]="'value: ' + card.role + '   ·   ' + card.company + '; color: ' + card.accentColor + '; align: center; width: 1.7; opacity: 0'"
+      position="0 -0.52 0.03"
+      data-entrance
+      animation__in="property: position; from: 0 -0.62 0.03; to: 0 -0.52 0.03; dur: 400; delay: 550; easing: easeOutCubic; startEvents: card:enter"
+      animation__fade="property: text.opacity; from: 0; to: 1; dur: 300; delay: 550; startEvents: card:enter"
+    ></a-text>
+
+    <!-- CAPA 5 · íconos sociales clicables (columna derecha) -->
+    @for (link of card.links; track link.id; let i = $index) {
+      <a-plane
+        class="clickable"
+        [attr.src]="'#ar-icon-' + link.id"
+        [attr.social-link]="link.url"
+        [attr.position]="'0.55 ' + (0.24 - i * 0.17) + ' 0.03'"
+        width="0.13"
+        height="0.13"
+        scale="0 0 0"
+        material="transparent: true; alphaTest: 0.1; side: double"
+        data-entrance
+        [attr.animation__in]="'property: scale; from: 0 0 0; to: 1 1 1; dur: 400; delay: ' + (650 + i * 90) + '; easing: easeOutBack; startEvents: card:enter'"
+        animation__hover="property: scale; to: 1.25 1.25 1.25; dur: 160; startEvents: mouseenter"
+        animation__unhover="property: scale; to: 1 1 1; dur: 160; startEvents: mouseleave"
+      ></a-plane>
+    }
+
+    <!-- CAPA 6 · elementos decorativos HUD giratorios -->
+    <a-plane
+      src="#ar-hud-1"
+      position="-0.55 0.5 0.005"
+      width="0.34"
+      height="0.34"
+      material="transparent: true; alphaTest: 0.05; opacity: 0.75; side: double"
+      data-entrance
+      animation__spin="property: rotation; from: 0 0 0; to: 0 0 360; dur: 9000; loop: true; easing: linear; startEvents: card:enter"
+    ></a-plane>
+
+    <a-plane
+      src="#ar-hud-2"
+      position="0.55 -0.55 0.005"
+      width="0.3"
+      height="0.3"
+      material="transparent: true; alphaTest: 0.05; opacity: 0.6; side: double"
+      data-entrance
+      animation__spin="property: rotation; from: 0 0 360; to: 0 0 0; dur: 12000; loop: true; easing: linear; startEvents: card:enter"
+    ></a-plane>
   </a-entity>
 </a-scene>
 
 <div class="hint" [class.hidden]="targetFound()">
-  <p>Apunta la cámara al marcador para ver el contenido en realidad aumentada</p>
+  <p>Apunta la cámara a la tarjeta para ver la experiencia en realidad aumentada</p>
 </div>
