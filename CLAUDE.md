@@ -2,6 +2,16 @@
 
 This file provides guidance to Claude Code (claude.ai/code) when working with code in this repository.
 
+## Context rules
+
+Detailed, topical project context lives in `.claude/rules/` and is imported here so
+it loads automatically. Keep these in sync when architecture decisions change.
+
+@.claude/rules/aframe-mindar-integration.md
+@.claude/rules/ar-card-scene.md
+@.claude/rules/assets-pipeline.md
+@.claude/rules/angular-conventions.md
+
 ## Project purpose
 
 This is an Angular 21 application that integrates **MindAR** (image/marker tracking) with **A-Frame** (WebXR/3D scene framework) to build an augmented-reality visualizer that runs in the browser. The AR scene lives in `src/app/ar-viewer/` and is rendered as the app's home route.
