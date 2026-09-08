@@ -20,7 +20,7 @@ import { RouterLink } from '@angular/router';
 })
 export class IosQuickLook {
   /** Path (relative to base href) of the USDZ asset served from `public/`. */
-  protected readonly modelSrc = 'models/model.usdz';
+  protected readonly modelSrc = 'models/model_io.usdz';
 
   /** True on iPhone/iPad — the only place Quick Look actually launches. */
   protected readonly isIos = signal(this.detectIos());
