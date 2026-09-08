@@ -1,0 +1,28 @@
+<main class="ql">
+  <a class="ql__back" routerLink="/">‹ Menú</a>
+
+  <h1>AR Quick Look (iOS)</h1>
+
+  @if (!isIos()) {
+    <p class="ql__warn">
+      Esta prueba solo se lanza en <strong>Safari de iPhone o iPad</strong>. En este
+      dispositivo el botón descargará el archivo <code>.usdz</code> en vez de abrir
+      el visor AR nativo.
+    </p>
+  }
+
+  <p class="ql__hint">
+    Toca el botón para abrir el visor de realidad aumentada del sistema.
+  </p>
+
+  <!-- rel="ar" + a single <img>/<picture> child is what iOS Safari hooks into. -->
+  <a class="ql__launch" [attr.href]="modelSrc" rel="ar">
+    <img src="ar/panel-bg.png" alt="Ver en AR" width="160" height="160" />
+    <span>Ver en AR</span>
+  </a>
+
+  <p class="ql__note">
+    Modelo: <code>{{ modelSrc }}</code> — coloca un archivo USDZ en
+    <code>public/models/</code> con ese nombre.
+  </p>
+</main>

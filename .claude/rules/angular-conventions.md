@@ -7,8 +7,11 @@ Angular CLI v21, app standalone (sin NgModules).
 - `src/main.ts` → `bootstrapApplication(App, appConfig)`.
 - `src/app/app.config.ts` → providers globales: `provideBrowserGlobalErrorListeners()`,
   `provideRouter(routes)`.
-- `src/app/app.routes.ts` → `''` mapea a `ArViewer` (`src/app/ar-viewer/`), la
-  escena AR y única ruta.
+- `src/app/app.routes.ts` → `''` mapea a `Home` (`src/app/home/`), el **menú de
+  pruebas**. Cada experiencia AR es una ruta lazy (`loadComponent`) cuyo `path`
+  coincide con una entrada del registro `src/app/experiences.ts`
+  (`/mindar` → `ArViewer`, `/ios-quick-look` → `IosQuickLook`). `**` redirige a `''`.
+  Agregar experiencia = entrada en `experiences.ts` + ruta lazy + componente.
 - `App` (`src/app/app.ts`) solo tiene `<router-outlet />`.
 
 ## Componentes

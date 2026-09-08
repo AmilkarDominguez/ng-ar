@@ -1,4 +1,5 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
+import { provideRouter } from '@angular/router';
 
 import { ArViewer } from './ar-viewer';
 
@@ -9,6 +10,7 @@ describe('ArViewer', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [ArViewer],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(ArViewer);

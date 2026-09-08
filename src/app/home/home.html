@@ -1,0 +1,33 @@
+<main class="menu">
+  <header class="menu__head">
+    <h1>Pruebas AR</h1>
+    <p>Elige una experiencia para probar.</p>
+  </header>
+
+  <ul class="cards">
+    @for (exp of experiences; track exp.id) {
+      <li class="card" [class.card--disabled]="!exp.available">
+        @if (exp.available) {
+          <a class="card__link" [routerLink]="'/' + exp.path" [attr.data-exp]="exp.id">
+            <span class="card__icon" aria-hidden="true">{{ exp.icon }}</span>
+            <span class="card__body">
+              <span class="card__title">{{ exp.title }}</span>
+              <span class="card__desc">{{ exp.description }}</span>
+              <span class="card__badge">{{ exp.badge }}</span>
+            </span>
+            <span class="card__chevron" aria-hidden="true">›</span>
+          </a>
+        } @else {
+          <div class="card__link" [attr.data-exp]="exp.id">
+            <span class="card__icon" aria-hidden="true">{{ exp.icon }}</span>
+            <span class="card__body">
+              <span class="card__title">{{ exp.title }}</span>
+              <span class="card__desc">{{ exp.description }}</span>
+              <span class="card__badge">Próximamente</span>
+            </span>
+          </div>
+        }
+      </li>
+    }
+  </ul>
+</main>

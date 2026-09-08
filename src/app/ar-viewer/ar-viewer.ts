@@ -8,12 +8,14 @@ import {
   viewChild,
 } from '@angular/core';
 
+import { RouterLink } from '@angular/router';
+
 import { ArCardDataService } from './ar-card-data';
 import { registerArCardComponents } from './ar-aframe-components';
 
 @Component({
   selector: 'app-ar-viewer',
-  imports: [],
+  imports: [RouterLink],
   templateUrl: './ar-viewer.html',
   styleUrl: './ar-viewer.scss',
   schemas: [CUSTOM_ELEMENTS_SCHEMA],

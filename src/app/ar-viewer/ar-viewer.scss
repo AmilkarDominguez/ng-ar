@@ -13,6 +13,20 @@ a-scene {
   height: 100%;
 }
 
+.back {
+  position: fixed;
+  top: 1rem;
+  left: 1rem;
+  z-index: 20;
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  background: rgba(0, 0, 0, 0.6);
+  color: #fff;
+  text-decoration: none;
+  font-family: system-ui, sans-serif;
+  font-size: 0.875rem;
+}
+
 .hint {
   position: fixed;
   inset-inline: 0;

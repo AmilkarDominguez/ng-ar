@@ -1,25 +1,30 @@
-# Modelo 3D del visor AR
+# Modelos 3D
 
-`ArViewer` (`src/app/ar-viewer/ar-viewer.html`) carga un modelo glTF binario desde:
+## `model.usdz` — prueba "iOS · AR Quick Look" (`/ios-quick-look`)
+
+`IosQuickLook` (`src/app/ios-quick-look/`) lanza el visor AR nativo de iOS con:
 
 ```
-public/models/model.glb
+public/models/model.usdz
 ```
 
 **No está incluido** — hay que agregarlo.
 
-## Requisitos del archivo
+### Requisitos
 
-- Formato `.glb` (glTF binario, todo en un solo archivo: geometría, texturas y animaciones). Si solo tenés `.gltf` + `.bin` + texturas sueltas, o los copiás todos a esta carpeta y cambiás el `src` del `<a-asset-item>` al `.gltf`, o los convertís a `.glb` (por ejemplo con [gltf-pipeline](https://github.com/CesiumGS/gltf-pipeline) o exportando directo como `.glb` desde Blender).
-- Para que se reproduzca la animación automáticamente (`animation-mixer="loop: repeat"` en el template), el archivo debe tener al menos un clip de animación embebido (en Blender: exportar con "Include > Animation" activado).
+- Formato **USDZ** (o `.reality`). Quick Look **no** lee `.glb`/`.gltf`.
+- Convertir un `.glb`/`.gltf` con [Reality Converter](https://developer.apple.com/augmented-reality/tools/) (macOS)
+  o [`usd_from_gltf`](https://github.com/google/usd_from_gltf).
+- Se sirve como estático desde `public/`; la ruta en el componente es
+  `models/model.usdz` (relativa al base href).
 
-## Ajustar posición/escala/rotación
+### Cómo probar
 
-Los modelos exportados vienen en escalas y orígenes muy distintos. En `ar-viewer.html`, el `<a-gltf-model>` arranca con `scale="0.05 0.05 0.05"` y `position="0 0 0"` como punto de partida razonable, pero casi siempre hay que afinarlo:
+Solo funciona en **Safari de iPhone/iPad**. En otros navegadores el enlace
+`<a rel="ar">` descarga el archivo en vez de abrir el visor — el componente
+muestra un aviso cuando detecta que no es iOS.
 
-1. Corré `npm start` y abrí la app.
-2. Abrí el inspector de A-Frame con `Ctrl+Alt+I` (funciona aunque MindAR no esté trackeando).
-3. Seleccioná la entidad del modelo y ajustá `position`, `rotation` y `scale` visualmente.
-4. Copiá los valores finales al template.
+## `model.glb`
 
-Si el modelo no aparece, revisá la consola del navegador: un 404 en `models/model.glb` significa que el archivo no está en esta carpeta con ese nombre.
+Ya **no** se usa en la escena MindAR (`ArViewer` es 100% `<a-plane>` 2D, sin
+`<a-gltf-model>`). Queda como fuente para generar el `.usdz` de arriba.

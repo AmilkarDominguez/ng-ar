@@ -1,0 +1,110 @@
+:host {
+  position: fixed;
+  inset: 0;
+  overflow-y: auto;
+  display: block;
+  background: radial-gradient(circle at 50% 0%, #16233a 0%, #0b0f18 60%);
+  color: #e8ecf4;
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+  -webkit-overflow-scrolling: touch;
+}
+
+.menu {
+  max-width: 640px;
+  margin: 0 auto;
+  padding: clamp(1.5rem, 5vw, 3rem) 1.25rem 3rem;
+
+  &__head {
+    margin-bottom: 1.75rem;
+
+    h1 {
+      margin: 0 0 0.35rem;
+      font-size: clamp(1.6rem, 6vw, 2.2rem);
+      letter-spacing: -0.02em;
+    }
+
+    p {
+      margin: 0;
+      color: #97a3b8;
+      font-size: 0.95rem;
+    }
+  }
+}
+
+.cards {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 0.85rem;
+}
+
+.card {
+  &__link {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    padding: 1rem 1.1rem;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    background: rgba(255, 255, 255, 0.04);
+    text-decoration: none;
+    color: inherit;
+    transition: background 0.15s ease, border-color 0.15s ease, transform 0.15s ease;
+  }
+
+  a.card__link:hover,
+  a.card__link:focus-visible {
+    background: rgba(94, 160, 255, 0.12);
+    border-color: rgba(94, 160, 255, 0.5);
+    transform: translateY(-1px);
+    outline: none;
+  }
+
+  &--disabled .card__link {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
+  &__icon {
+    flex: none;
+    font-size: 1.9rem;
+    line-height: 1;
+  }
+
+  &__body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    min-width: 0;
+  }
+
+  &__title {
+    font-size: 1.05rem;
+    font-weight: 600;
+  }
+
+  &__desc {
+    font-size: 0.85rem;
+    color: #97a3b8;
+    line-height: 1.4;
+  }
+
+  &__badge {
+    align-self: flex-start;
+    margin-top: 0.15rem;
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+    background: rgba(94, 160, 255, 0.15);
+    color: #9ec5ff;
+    font-size: 0.7rem;
+    letter-spacing: 0.02em;
+  }
+
+  &__chevron {
+    flex: none;
+    margin-left: auto;
+    font-size: 1.5rem;
+    color: #6b7890;
+  }
+}
